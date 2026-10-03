@@ -19,14 +19,16 @@ class ShoppingCart:
         """
         total = sum(item.price for item in self.items)
         if discount_percent > 0:
-            total -= discount_percent
+            total -= total * (discount_percent / 100.0)
         return round(max(0.0, total), 2)
-        
+
     def get_most_expensive_item(self) -> Optional[Item]:
         """
         Returns the item with the highest price.
         Returns None if the cart is empty.
         """
+        if not self.items:
+            return None
         return max(self.items, key=lambda item: item.price)
 
 def paginate_items(items: List[Item], page: int, page_size: int) -> List[Item]:
@@ -34,7 +36,7 @@ def paginate_items(items: List[Item], page: int, page_size: int) -> List[Item]:
     Returns a slice of items for the given page.
     Pages are 1-indexed.
     """
-    start = (page) * page_size 
+    start = (page - 1) * page_size
     end = start + page_size
     return items[start:end]
 
